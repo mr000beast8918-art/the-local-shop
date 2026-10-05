@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#111827">
+<title>The Local Shop — Fresh Finds, Best Prices</title>
+<style>
+:root{
+  --bg:#f7f7f8;--card:#fff;--text:#111827;--muted:#6b7280;
+  --accent:#111827;--accent2:#f59e0b;--line:#e5e7eb;--success:#16a34a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+button,input,textarea{font:inherit}
+button{cursor:pointer;border:0}
+.container{width:min(1120px,92%);margin:auto}
+header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav{height:64px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-weight:900;font-size:20px;letter-spacing:-.5px}
+.logo span{color:var(--accent2)}
+.nav-cart{position:relative;background:#111827;color:#fff;width:44px;height:44px;border-radius:50%;font-size:20px}
+.badge{position:absolute;right:-3px;top:-4px;background:#ef4444;color:white;border-radius:99px;min-width:19px;height:19px;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.hero{position:relative;min-height:72vh;display:flex;align-items:flex-end;overflow:hidden;background:#222}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.78),rgba(0,0,0,.05) 70%)}
+.hero-content{position:relative;z-index:2;color:#fff;padding:70px 0 50px}
+.eyebrow{text-transform:uppercase;letter-spacing:2px;font-size:12px;font-weight:800;color:#fbbf24;margin-bottom:10px}
+.hero h1{font-size:clamp(38px,10vw,72px);line-height:.98;letter-spacing:-2px;max-width:700px}
+.hero p{font-size:17px;color:#f3f4f6;margin:18px 0 25px;max-width:560px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 21px;border-radius:14px;font-weight:800;transition:.2s}
+.btn-primary{background:#fff;color:#111827}
+.btn-dark{background:#111827;color:#fff}
+.btn:hover{transform:translateY(-2px)}
+.section{padding:58px 0}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:15px;margin-bottom:22px}
+.section h2{font-size:30px;letter-spacing:-1px}
+.section-sub{color:var(--muted);font-size:14px}
+.products{display:flex;gap:16px;overflow-x:auto;padding:5px 2px 16px;scroll-snap-type:x mandatory;scrollbar-width:none}
+.products::-webkit-scrollbar{display:none}
+.product{min-width:78%;max-width:310px;background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;scroll-snap-align:start;box-shadow:0 8px 25px rgba(17,24,39,.05)}
+.product-img{height:245px;position:relative;background:#eee}
+.product-img img{width:100%;height:100%;object-fit:cover}
+.product-info{padding:17px}
+.product h3{font-size:18px;margin-bottom:5px}
+.product p{font-size:13px;color:var(--muted);min-height:39px}
+.product-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:15px}
+.price{font-size:20px;font-weight:900}
+.add{background:#111827;color:#fff;padding:11px 14px;border-radius:12px;font-weight:800}
+.cart-panel{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.45);display:none;align-items:flex-end}
+.cart-panel.open{display:flex}
+.cart{background:#fff;width:100%;max-height:92vh;border-radius:25px 25px 0 0;padding:22px;overflow:auto}
+.cart-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.close{background:#f3f4f6;width:38px;height:38px;border-radius:50%;font-size:20px}
+.cart-items{display:grid;gap:12px}
+.cart-item{display:flex;align-items:center;gap:12px;border:1px solid var(--line);padding:10px;border-radius:14px}
+.cart-item img{width:65px;height:65px;object-fit:cover;border-radius:10px}
+.cart-item-main{flex:1}
+.cart-item-main strong{display:block}
+.qty{display:flex;align-items:center;gap:8px;margin-top:5px}
+.qty button{width:27px;height:27px;border-radius:8px;background:#f3f4f6}
+.cart-total{display:flex;justify-content:space-between;font-size:20px;font-weight:900;padding:18px 0;border-top:1px solid var(--line);margin-top:18px}
+.form{display:grid;gap:12px}
+.field label{display:block;font-size:13px;font-weight:800;margin-bottom:5px}
+.field input,.field textarea{width:100%;padding:13px;border:1px solid #d1d5db;border-radius:12px;outline:none;background:#fff}
+.field textarea{min-height:75px;resize:vertical}
+.empty{text-align:center;padding:30px;color:var(--muted)}
+.success{background:#ecfdf5;border:1px solid #bbf7d0;color:#166534;padding:14px;border-radius:12px;font-size:14px}
+footer{background:#111827;color:#fff;padding:35px 0;margin-top:30px}
+footer p{color:#cbd5e1;font-size:13px;margin-top:5px}
+.whatsapp{position:fixed;right:18px;bottom:18px;z-index:80;width:56px;height:56px;border-radius:50%;background:#25D366;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 25px rgba(0,0,0,.25);font-size:27px;text-decoration:none}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(20px);background:#111827;color:#fff;padding:12px 17px;border-radius:12px;opacity:0;pointer-events:none;transition:.25s;z-index:200;font-size:14px}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(min-width:700px){
+ .product{min-width:280px}
+ .cart{width:min(620px,100%);margin-left:auto;border-radius:25px 0 0 25px;max-height:100vh;height:100vh}
+ .cart-panel{align-items:stretch}
+ .hero{min-height:78vh}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container nav">
+    <div class="logo">the local <span>shop.</span></div>
+    <button class="nav-cart" onclick="openCart()" aria-label="Open cart">🛒<span class="badge" id="cartCount">0</span></button>
+  </div>
+</header>
+
+<section class="hero">
+  <img src="https://i.ibb.co/WvH5yJ5J/happy-beautiful-couple-posing-with-shopping-bags-violet.jpg" alt="Happy shoppers">
+  <div class="container hero-content">
+    <div class="eyebrow">The Local Shop</div>
+    <h1>Fresh Finds,<br>Best Prices.</h1>
+    <p>Discover everyday favourites at simple, local-shop prices. Add your picks to the cart and place your order in minutes.</p>
+    <a class="btn btn-primary" href="#products">Shop Now ↓</a>
+  </div>
+</section>
+
+<section class="section" id="products">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <h2>Our Picks</h2>
+        <div class="section-sub">Swipe to explore products →</div>
+      </div>
+    </div>
+
+    <div class="products">
+      <article class="product">
+        <div class="product-img">
+          <img src="https://i.ibb.co/1Gs9ssLY/IMG-20260827-WA0008.jpg" alt="Local Shop Product 1">
+        </div>
+        <div class="product-info">
+          <h3>Everyday Favourite</h3>
+          <p>Quality pick for your everyday needs.</p>
+          <div class="product-bottom">
+            <span class="price">₹499</span>
+            <button class="add" onclick="addToCart(1)">Add to Cart</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="product">
+        <div class="product-img">
+          <img src="https://i.ibb.co/Pz9KqSSH/IMG-20260827-WA0002.jpg" alt="Local Shop Product 2">
+        </div>
+        <div class="product-info">
+          <h3>Special Pick</h3>
+          <p>A smart choice with great value for money.</p>
+          <div class="product-bottom">
+            <span class="price">₹599</span>
+            <button class="add" onclick="addToCart(2)">Add to Cart</button>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div style="background:#fff;border:1px solid var(--line);border-radius:22px;padding:24px">
+      <h2 style="font-size:24px">Why shop local?</h2>
+      <p class="section-sub" style="margin-top:8px">Simple ordering, carefully selected products and friendly local service.</p>
+    </div>
+  </div>
+</section>
+
+<div class="cart-panel" id="cartPanel" onclick="outsideClose(event)">
+  <div class="cart">
+    <div class="cart-header">
+      <h2>Your Cart</h2>
+      <button class="close" onclick="closeCart()">×</button>
+    </div>
+
+    <div id="cartContent"></div>
+
+    <div id="orderArea" style="display:none">
+      <div class="cart-total"><span>Total</span><span id="total">₹0</span></div>
+      <h3 style="margin-bottom:12px">Place Your Order</h3>
+      <form class="form" onsubmit="placeOrder(event)">
+        <div class="field"><label>Full Name *</label><input id="name" required placeholder="Your name"></div>
+        <div class="field"><label>Phone Number *</label><input id="phone" required type="tel" pattern="[0-9]{10}" placeholder="10-digit mobile number"></div>
+        <div class="field"><label>Delivery Address *</label><textarea id="address" required placeholder="House, street, area, city, PIN"></textarea></div>
+        <div class="field"><label>Order Note</label><textarea id="note" placeholder="Optional"></textarea></div>
+        <button class="btn btn-dark" type="submit">Place Order</button>
+      </form>
+      <p style="font-size:12px;color:#6b7280;margin-top:10px">Your order request will be prepared for WhatsApp/email. No payment is collected on this page.</p>
+      <div id="orderResult"></div>
+    </div>
+  </div>
+</div>
+
+<a class="whatsapp" href="https://wa.me/8918127870" target="_blank" rel="noopener" aria-label="WhatsApp">◉</a>
+<div class="toast" id="toast">Added to cart</div>
+
+<footer>
+  <div class="container">
+    <strong>the local shop.</strong>
+    <p>Fresh Finds, Best Prices</p>
+    <p>Owner: skiron125@gmail.com</p>
+  </div>
+</footer>
+
+<script>
+const products = {
+  1:{name:"Everyday Favourite",price:499,img:"https://i.ibb.co/1Gs9ssLY/IMG-20260827-WA0008.jpg"},
+  2:{name:"Special Pick",price:599,img:"https://i.ibb.co/Pz9KqSSH/IMG-20260827-WA0002.jpg"}
+};
+let cart = {};
+
+function addToCart(id){
+  cart[id]=(cart[id]||0)+1;
+  updateCart();
+  showToast("Added to cart ✓");
+}
+function changeQty(id,amount){
+  cart[id]=(cart[id]||0)+amount;
+  if(cart[id]<=0) delete cart[id];
+  updateCart();
+}
+function cartCount(){
+  return Object.values(cart).reduce((a,b)=>a+b,0);
+}
+function cartTotal(){
+  return Object.entries(cart).reduce((sum,[id,q])=>sum+products[id].price*q,0);
+}
+function updateCart(){
+  document.getElementById("cartCount").textContent=cartCount();
+  const box=document.getElementById("cartContent");
+  const order=document.getElementById("orderArea");
+  if(!cartCount()){
+    box.innerHTML='<div class="empty">Your cart is empty.<br><span style="font-size:13px">Add something you love!</span></div>';
+    order.style.display="none";
+    return;
+  }
+  box.innerHTML=Object.entries(cart).map(([id,q])=>{
+    const p=products[id];
+    return `<div class="cart-item">
+      <img src="${p.img}" alt="${p.name}">
+      <div class="cart-item-main"><strong>${p.name}</strong><span>₹${p.price}</span>
+      <div class="qty"><button onclick="changeQty(${id},-1)">−</button><b>${q}</b><button onclick="changeQty(${id},1)">+</button></div></div>
+      <b>₹${p.price*q}</b>
+    </div>`;
+  }).join("");
+  document.getElementById("total").textContent="₹"+cartTotal();
+  order.style.display="block";
+}
+function openCart(){
+  updateCart();
+  document.getElementById("cartPanel").classList.add("open");
+  document.body.style.overflow="hidden";
+}
+function closeCart(){
+  document.getElementById("cartPanel").classList.remove("open");
+  document.body.style.overflow="";
+}
+function outsideClose(e){
+  if(e.target.id==="cartPanel") closeCart();
+}
+function showToast(text){
+  const t=document.getElementById("toast");
+  t.textContent=text;t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),1800);
+}
+function placeOrder(e){
+  e.preventDefault();
+  const name=document.getElementById("name").value.trim();
+  const phone=document.getElementById("phone").value.trim();
+  const address=document.getElementById("address").value.trim();
+  const note=document.getElementById("note").value.trim();
+  let lines=Object.entries(cart).map(([id,q])=>`${products[id].name} x ${q} = ₹${products[id].price*q}`);
+  const orderText=`NEW ORDER - The Local Shop\n\nCustomer: ${name}\nPhone: ${phone}\nAddress: ${address}\n\nItems:\n${lines.join("\n")}\n\nTotal: ₹${cartTotal()}\nNote: ${note||"None"}`;
+  const wa="https://wa.me/8918127870?text="+encodeURIComponent(orderText);
+  document.getElementById("orderResult").innerHTML=
+    `<div class="success" style="margin-top:15px">Order details prepared. Tap below to send the order on WhatsApp.<br><br>
+    <a class="btn btn-dark" href="${wa}" target="_blank" rel="noopener">Send Order on WhatsApp</a></div>`;
+  document.getElementById("orderResult").scrollIntoView({behavior:"smooth",block:"center"});
+}
+updateCart();
+</script>
+</body>
+</html>
